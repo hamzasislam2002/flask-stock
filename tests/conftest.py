@@ -2,7 +2,7 @@ import os
 import pytest
 from project import create_app, database
 from flask import current_app
-from project.models import Stock
+from project.models import Stock, User 
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -34,3 +34,27 @@ def test_client():
 def new_stock():
     stock = Stock('AAPL', '16', '406.78')
     return stock
+
+@pytest.fixture(scope='module')
+def new_user():
+	user = User('patrick@email.com', 'FlaskIsAwesome123')
+	return user
+
+@pytest.fixture(scope='module')
+def register_default_user(test_client):
+     test_client.post('/users/register',
+                      data={'email': 'patrick@gmail.com',
+                            'password': 'FlaskIsAwesome123'},
+                      follow_redirects=True)
+     return 
+
+@pytest.fixture(scope='function')
+def log_in_default_user(test_client, register_default_user):
+    test_client.post('/users/login',
+                    data={'email': 'patrick@gmail.com',
+                           'password': 'FlaskIsAwesome123'},
+                    follow_redirects=True)
+    
+    yield
+
+    test_client.get('/users/logout', follow_redirects=True)
