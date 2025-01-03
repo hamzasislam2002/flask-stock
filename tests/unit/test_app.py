@@ -1,6 +1,6 @@
-from app import StockModel
-import pytest
+from project.stocks.routes import StockModel
 from pydantic import ValidationError
+import pytest
 
 def test_validate_stock_data_nominal():
     """

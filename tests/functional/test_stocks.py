@@ -1,6 +1,6 @@
 from app import app
 
-def test_index_page():
+def test_index_page(test_client):
     with app.test_client() as client:
         response = client.get('/')
         assert response.status_code == 200
@@ -8,16 +8,16 @@ def test_index_page():
         assert b'Welcome to the' in response.data
         assert b'Flask Stock Portfolio App!' in response.data
 
-def test_about_page():
+def test_about_page(test_client):
     with app.test_client() as client:
-        response = client.get('/about')
+        response = client.get('/users/about')
         assert response.status_code == 200
         assert b'Flask Stock Portfolio App' in response.data
         assert b'About' in response.data
         assert b'This application is built using the Flask web framework.' in response.data
         assert b'Course developed by TestDriven.io' in response.data
 
-def test_get_add_stock_page():
+def test_get_add_stock_page(test_client):
     with app.test_client() as client:
         response = client.get('/add_stock')
         assert response.status_code == 200
@@ -27,7 +27,7 @@ def test_get_add_stock_page():
         assert b'Number of Shares <em>(required)</em>' in response.data
         assert b'Purchase Price ($) <em>(required)</em>' in response.data
 
-def test_post_add_stock_page():
+def test_post_add_stock_page(test_client):
     with app.test_client() as client:
         response = client.post('/add_stock',
                                data={'stock_symbol': 'AAPL',
@@ -43,3 +43,5 @@ def test_post_add_stock_page():
         assert b'AAPL' in response.data
         assert b'23' in response.data
         assert b'432.17' in response.data
+
+
